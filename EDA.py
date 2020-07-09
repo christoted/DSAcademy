@@ -32,13 +32,13 @@ class Dataset:
 
         return self.nan_rows
 
-    def del_mileage_unit(self):
-
-        # We assume that the density of gasoline is 730Kg/m3 or 0.73Kg/l
-        #
-
-        data_mileage = self.data.Mileage
-        for i in range(self.num_data):
+    # def del_mileage_unit(self):
+    #
+    #     # We assume that the density of gasoline is 730Kg/m3 or 0.73Kg/l
+    #     #
+    #
+    #     data_mileage = self.data.Mileage
+    #     for i in range(self.num_data):
 
 
     def add_manufacturer(self):
