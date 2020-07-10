@@ -65,9 +65,9 @@ class Dataset:
             if first_word in ['null','nan','Nan','NaN','none','Null','0','0.0']:
                 del_column.iloc[i] = np.nan
             else:
-                del_column.iloc[i] = first_word
+                del_column.iloc[i] = float(first_word)
 
-        print('\nUnits of ' + feature + ' has been dropped\n')
+        print('\nUnit of ' + feature + ' has been dropped\n')
 
         self.data[feature] = del_column
 
@@ -147,17 +147,27 @@ class Dataset:
                 print(item, end = ' ')
         print('ownership is ' + str(count_criteria) + '\n')
 
-    # def plot_fuel_milage(self):
-    #     fuel_types  = self.data['Fuel_Type'].unique()
-    #     mean_milage = []
-    #
-    #     for i in range(self.num_data):
-    #         mean_milage.append(self.data.loc[self.data['Fuel_Type'] == i].Mileage.mean())
-    #
-    #     plt.bar(fuel_types, height = mean_milage)
-    #     plt.xlabel('Fuel types')
-    #     plt.ylabel('Mean mileage ()')
-    #     plt.
+    def count_mileage_per_fuel(self, export_data = False, name = None):
+
+        unique_fuel  = list(self.data['Fuel_Type'].unique())
+        mean_mileage = []
+
+        for i in unique_fuel:
+            current_mean = self.data.loc[self.data.Fuel_Type == i].Mileage.mean()
+            mean_mileage.append(current_mean)
+
+        fuel_mileage                 = pd.DataFrame()
+        fuel_mileage['fuel']         = unique_fuel
+        fuel_mileage['mean_mileage'] = mean_mileage
+        fuel_mileage                 = fuel_mileage.sort_values('mean_mileage', ascending = False)
+
+        print('\nFuel with lowest mileage value is ' + fuel_mileage.iloc[-1, 0] + ' with mean mileage of ' + str(fuel_mileage.iloc[-1, 1]))
+        print(fuel_mileage)
+
+        if export_data == True:
+            fuel_mileage.to_csv(name)
+
+        print()
 
     def plot_dist(self, feature, partitions = 22, export_data = False, name = None):
 

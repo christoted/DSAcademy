@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy  as np
 from   EDA import Dataset
 
 # Importing data and making object out of it
@@ -48,8 +49,7 @@ dataset.plot_scatter('Year', 'Kilometers_Driven')
 dataset.count_not_first(exclude_wear= ['First', 'Second'])
 
 # Nomor 9
-# Tiati bahan bakarnya ada yg satuannya KM/L dan KM/Kg. Harus disamain dulu.
-# Masih string pula...
-# dataset.plot_scatter('Fuel_Type', 'Mileage')
+# Calculating average mileage by Fuel_Type
+dataset.count_mileage_per_fuel('Fuel_Type', 'Mileage')
 
 # Nomor 10
