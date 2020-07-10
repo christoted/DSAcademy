@@ -24,11 +24,15 @@ class Dataset:
 
         print('\nNumber of row with missing value : ' + str(num_row_nan) + '\n')
         print('Missing value by column :')
-        print(self.data.isna().sum(),'\n')
 
         if drop_nan == True:
+            print(self.data.isna().sum())
             self.data     = self.data.drop(index = self.nan_rows).reset_index(drop = True)
             self.num_data = np.shape(self.data)[0]
+            print('Rows with at least one missing value has been omitted\n')
+        else:
+            print(self.data.isna().sum(),'\n')
+
 
         return self.nan_rows
 
@@ -51,6 +55,21 @@ class Dataset:
         self.data['Mileage'] = data_mileage
 
         print('\nMileage unit has been updated\n')
+
+    def del_units(self, feature):
+
+        del_column = self.data[feature]
+
+        for i in range(self.num_data):
+            first_word = del_column.iloc[i].split(' ')[0]
+            if first_word in ['null','nan','Nan','NaN','none','Null','0','0.0']:
+                del_column.iloc[i] = np.nan
+            else:
+                del_column.iloc[i] = first_word
+
+        print('\nUnits of ' + feature + ' has been dropped\n')
+
+        self.data[feature] = del_column
 
     def add_manufacturer(self):
 
