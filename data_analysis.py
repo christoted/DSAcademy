@@ -10,7 +10,10 @@ dataset.missing_value(drop_nan = True)
 # Check whether missing value still presist.
 # dataset.missing_value()
 
-# Adding manufacturer.
+# Removing unit of mileage
+dataset.del_mileage_unit()
+
+# Adding manufacturer
 dataset.add_manufacturer()
 
 # Nomor 1

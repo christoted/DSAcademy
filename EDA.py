@@ -32,14 +32,25 @@ class Dataset:
 
         return self.nan_rows
 
-    # def del_mileage_unit(self):
-    #
-    #     # We assume that the density of gasoline is 730Kg/m3 or 0.73Kg/l
-    #     #
-    #
-    #     data_mileage = self.data.Mileage
-    #     for i in range(self.num_data):
+    def del_mileage_unit(self):
 
+        # We assume that the density of gasoline is 780Kg/m3 or 0.78Kg/l so that km/l = 0.78 * km/kg
+        # We want to convert mileage data unit into km/l
+
+        data_mileage = self.data.Mileage
+
+        for i in range(self.num_data):
+            mileage_value = float(data_mileage.iloc[i].split(' ')[0])
+            mileage_unit  =       data_mileage.iloc[i].split(' ')[1]
+
+            if mileage_unit == 'km/kg':
+                mileage_value *= 0.78
+
+            data_mileage.iloc[i] = mileage_value
+
+        self.data['Mileage'] = data_mileage
+
+        print('\nMileage unit has been updated\n')
 
     def add_manufacturer(self):
 
