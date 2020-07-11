@@ -11,65 +11,86 @@ class Dataset:
         self.nan_rows            = []
         self.unique_manufacturer = []
 
-    def missing_value(self, drop_nan = False):
+    def missing_value(self, drop_nan = False, export_data = False, name_cleaned = None, name_dropped = None):
 
-        row_nan       = self.data.isna().sum(axis = 1) != 0
-        self.nan_rows = []
+        row_nan    = self.data.isna().sum(axis = 1) != 0
+        nan_rows   = []
+        clean_rows = np.arange(self.num_data).tolist()
 
         for i in range(self.num_data):
             if row_nan[i] == 1:
-                self.nan_rows.append(i)
+                nan_rows.append(i)
+
+        for i in nan_rows:
+            clean_rows.remove(i)
 
         num_row_nan = row_nan.sum()
 
         print('\nNumber of row with missing value : ' + str(num_row_nan) + '\n')
         print('Missing value by column :')
 
+        dropped_data = self.data.drop(index=clean_rows).reset_index(drop=True)
+        dropped_data.to_csv(name_dropped, index=False)
+
         if drop_nan == True:
             print(self.data.isna().sum())
-            self.data     = self.data.drop(index = self.nan_rows).reset_index(drop = True)
+            self.data     = self.data.drop(index = nan_rows).reset_index(drop = True)
             self.num_data = np.shape(self.data)[0]
-            print('Rows with at least one missing value has been omitted\n')
+            print('Rows with at least one missing value has been omitted')
         else:
-            print(self.data.isna().sum(),'\n')
+            print(self.data.isna().sum())
 
+        if export_data == True:
+            self.data.to_csv(name_cleaned, index = False)
+            print('File ' + name_cleaned + ' contains cleaned data' )
+            print('File ' + name_dropped + ' contains dropped data' )
+        print(' ')
 
-        return self.nan_rows
+        return nan_rows
 
     def del_mileage_unit(self):
-
         # We assume that the density of gasoline is 780Kg/m3 or 0.78Kg/l so that km/l = 0.78 * km/kg
         # We want to convert mileage data unit into km/l
-
-        data_mileage = self.data.Mileage
-
+        data_mileage = []
         for i in range(self.num_data):
-            mileage_value = float(data_mileage.iloc[i].split(' ')[0])
-            mileage_unit  =       data_mileage.iloc[i].split(' ')[1]
-
-            if mileage_unit == 'km/kg':
-                mileage_value *= 0.78
-
-            data_mileage.iloc[i] = mileage_value
-
+            words = self.data['Mileage'].iloc[i]
+            if pd.isna(words):
+                mileage_value = np.nan
+            else:
+                split_words = words.split(' ')
+                value       = float(split_words[0])
+                unit        =       split_words[1]
+                if value == 0:
+                    mileage_value = np.nan
+                else:
+                    mileage_value = value
+                    if unit == 'km/kg':
+                        mileage_value *= 0.78
+            data_mileage.append(mileage_value)
         self.data['Mileage'] = data_mileage
-
-        print('\nMileage unit has been updated\n')
+        print('\nUnit of Mileage has been dropped\n')
 
     def del_units(self, feature):
-
-        del_column = self.data[feature]
-
+        new_values = []
         for i in range(self.num_data):
-            first_word = del_column.iloc[i].split(' ')[0]
-            if first_word in ['null','nan','Nan','NaN','none','Null','0','0.0']:
-                del_column.iloc[i] = np.nan
+            words = self.data[feature].iloc[i]
+            if pd.isna(words):
+                value = np.nan
             else:
-                del_column.iloc[i] = float(first_word)
+                split_words = words.split(' ')
+                value       = split_words[0]
+                unit        = split_words[1]
+                if value in ['null','nan','Nan','NaN','none','Null','',' ']:
+                    value = np.nan
+                else:
+                    value = float(value)
+                    if value == 0:
+                        value = np.nan
+            new_values.append(value)
 
         print('\nUnit of ' + feature + ' has been dropped\n')
 
-        self.data[feature] = del_column
+        self.data[feature] = new_values
 
     def add_manufacturer(self):
 

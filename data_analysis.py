@@ -1,13 +1,11 @@
 import pandas as pd
-import numpy  as np
-from   EDA import Dataset
+from EDA import Dataset
 
 # Importing data and making object out of it
 data    = pd.read_csv('used_car_data.csv')
 dataset = Dataset(data)
 
-# Missing value info. Drops rows with at least one missing value.
-dataset.missing_value(drop_nan = True)
+print(dataset.data.tail())
 
 # Removing unit of mileage
 dataset.del_mileage_unit()
@@ -16,9 +14,13 @@ dataset.del_mileage_unit()
 dataset.del_units('Power')
 dataset.del_units('Engine')
 
-# Check whether missing value still presist.
-dataset.missing_value(drop_nan = True)
+# Missing value info. Drops rows with at least one missing value.
+dataset.missing_value(drop_nan = True,
+                      export_data = True,
+                      name_cleaned = 'cleaned_data.csv',
+                      name_dropped = 'dropped_data.csv')
 
+'''
 # Nomor 1
 # Counting cars by manufacturer.
 dataset.add_manufacturer()
@@ -53,3 +55,4 @@ dataset.count_not_first(exclude_wear= ['First', 'Second'])
 dataset.count_mileage_per_fuel('Fuel_Type', 'Mileage')
 
 # Nomor 10
+'''
