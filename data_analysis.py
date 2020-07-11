@@ -1,11 +1,14 @@
+# A collaborative data analysis effort by :
+# Christopher Teddy
+# Luis Anthonie Alkins
+# Misael Jordan Enrico
+
 import pandas as pd
 from EDA import Dataset
 
 # Importing data and making object out of it
 data    = pd.read_csv('used_car_data.csv')
 dataset = Dataset(data)
-
-print(dataset.data.tail())
 
 # Removing unit of mileage
 dataset.del_mileage_unit()
@@ -14,16 +17,17 @@ dataset.del_mileage_unit()
 dataset.del_units('Power')
 dataset.del_units('Engine')
 
+# Adding Manufacturer column
+dataset.add_manufacturer()
+
 # Missing value info. Drops rows with at least one missing value.
 dataset.missing_value(drop_nan = True,
                       export_data = True,
                       name_cleaned = 'cleaned_data.csv',
                       name_dropped = 'dropped_data.csv')
 
-'''
 # Nomor 1
 # Counting cars by manufacturer.
-dataset.add_manufacturer()
 dataset.count_manufacturer(export_data = True)
 
 # Nomor 2
@@ -55,4 +59,3 @@ dataset.count_not_first(exclude_wear= ['First', 'Second'])
 dataset.count_mileage_per_fuel('Fuel_Type', 'Mileage')
 
 # Nomor 10
-'''

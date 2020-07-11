@@ -103,6 +103,19 @@ class Dataset:
             manufacturer.append(name)
 
         self.data['Manufacturer'] = manufacturer
+        self.data = self.data[['Name',
+                               'Manufacturer',
+                               'Location',
+                               'Year',
+                               'Kilometers_Driven',
+                               'Fuel_Type',
+                               'Transmission',
+                               'Owner_Type',
+                               'Mileage',
+                               'Engine',
+                               'Power',
+                               'Seats',
+                               'Price']]
 
         self.unique_manufacturer = self.data.Manufacturer.unique()
         num_unique_manufacturer  = len(self.unique_manufacturer)
