@@ -4,6 +4,7 @@
 # Misael Jordan Enrico
 
 import pandas as pd
+import matplotlib.pyplot as plt
 from EDA import Dataset
 
 # Importing data and making object out of it
@@ -43,6 +44,8 @@ dataset.plot_dist('Year', partitions = 22, export_data = True, name = 'jawaban_s
 dataset.dist_below(100000)
 
 # Nomor 5
+dataset.plot_dist('Kilometers_Driven', partitions = 3000)
+dataset.plot_boxplot('Kilometers_Driven')
 
 # Nomor 6
 

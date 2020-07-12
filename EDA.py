@@ -1,6 +1,7 @@
 import pandas            as pd
 import numpy             as np
 import matplotlib.pyplot as plt
+import math
 
 from copy import deepcopy
 
@@ -216,7 +217,7 @@ class Dataset:
 
         plt.hist(data_hist, bins = partitions)
         plt.title('The histogram of ' + feature)
-        plt.xlabel('Years')
+        plt.xlabel(feature)
         plt.ylabel('Frequency')
         plt.show()
 
@@ -228,6 +229,37 @@ class Dataset:
         plt.title('The scatter plot of ' + feature1 + ' and ' + feature2)
         plt.xlabel(feature1)
         plt.ylabel(feature2)
+        plt.show()
+
+    def plot_boxplot(self, feature):
+        boxplot_data = self.data[feature]
+
+        q1 = np.quantile(boxplot_data, 0.25)
+        q2 = np.quantile(boxplot_data, 0.5)
+        q3 = np.quantile(boxplot_data, 0.75)
+
+        IQR = q3 - q1
+
+        max = q3 + 1.5*IQR
+        min = q1 - 1.5*IQR
+
+        outlier_up   = np.sum(boxplot_data > max)
+        outlier_down = np.sum(boxplot_data < min)
+
+        print('\nQ1  : ' + str(q1))
+        print('Q2  : ' + str(q2))
+        print('Q3  : ' + str(q3))
+        print('Max : ' + str(max))
+        print('Min : ' + str(min))
+        print('There are ' + str(outlier_up) + ' upper outliers data in ' + feature)
+        print('There are ' + str(outlier_down) + ' bottom outliers data in ' + feature)
+
+        self.data.boxplot(column = feature, showfliers = False)
+        plt.title('Boxplot of ' + feature + ' without outliers')
+        plt.show()
+
+        self.data.boxplot(column = feature, showfliers = True)
+        plt.title('Boxplot of ' + feature + ' with outliers')
         plt.show()
 
     def dist_below(self, x = 50000):
