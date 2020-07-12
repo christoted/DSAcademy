@@ -44,13 +44,13 @@ dataset.plot_dist('Year', partitions = 22, export_data = True, name = 'jawaban_s
 dataset.dist_below(100000)
 
 # Nomor 5
-dataset.plot_dist('Kilometers_Driven', partitions = 3000)
-dataset.plot_boxplot('Kilometers_Driven')
+dataset.plot_dist('Kilometers_Driven', partitions = 1000)
 
 # Nomor 6
+dataset.plot_boxplot('Kilometers_Driven')
 
 # Nomor 7
-# Nanti uji signifikansi parameter regresi linear pake ANOVA
+# ANOVA
 dataset.plot_scatter('Year', 'Kilometers_Driven')
 
 # Nomor 8

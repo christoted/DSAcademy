@@ -258,7 +258,7 @@ class Dataset:
         plt.title('Boxplot of ' + feature + ' without outliers')
         plt.show()
 
-        self.data.boxplot(column = feature, showfliers = True)
+        self.data.boxplot(showfliers = True)
         plt.title('Boxplot of ' + feature + ' with outliers')
         plt.show()
 
