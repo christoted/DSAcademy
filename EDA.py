@@ -278,6 +278,54 @@ class Dataset:
         print('\nThe number of cars with distance traveled below ' + str(x) + ' KM is : ' + str(dist_below_x) + '\n')
         return dist_below_x
 
+    def string2num(self, features = None, export_data = False, name = None):
+        for i in features:
+            unique = self.data[i].unique()
+            for j in range(self.num_data):
+                self.data[i].iloc[j] = np.where((unique == self.data[i].iloc[j]) == 1)[0][0]
+            pd.to_numeric(self.data[i])
+
+        if export_data == True:
+            self.data.to_csv(name, index = False)
+            print('\nData has been changed to numeric. Below shown datatypes of each columns:')
+            print(self.data.dtypes)
+            print('Numeric file has been exported.\n')
+        else:
+            print('\nData has been changed to numeric. Below shown datatypes of each columns:')
+            print(self.data.dtypes)
+            print(' ')
+
+    def heatmap_corr(self, save=False, title='Correlation Coefficient Between Variables', filename=None):
+        corr_matrix = self.data.corr()
+        col_names   = self.data.columns
+
+        corr_matrix = np.around(corr_matrix.to_numpy(), 2)
+        fig, ax = plt.subplots()
+        im = ax.imshow(corr_matrix)
+
+        ax.set_xticks(np.arange(len(col_names)))
+        ax.set_yticks(np.arange(len(col_names)))
+
+        ax.set_xticklabels(col_names, size = 8)
+        ax.set_yticklabels(col_names, size = 8)
+
+        bottom, top = ax.get_ylim()
+        ax.set_ylim(bottom+0.5, top-0.5)
+
+        plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+                 rotation_mode="anchor")
+
+        for i in range(len(col_names)):
+            for j in range(len(col_names)):
+                text = ax.text(j, i, corr_matrix[i, j],
+                               ha="center", va="center", color="black", fontsize=6)
+
+        ax.set_title(title)
+        fig.tight_layout()
+        if save == True:
+            plt.savefig(filename, dpi=2000)
+        plt.show()
+
     def export_no_outlier(self, feature, num):
         data_export = self.data[feature]
         output      = []

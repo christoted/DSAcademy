@@ -44,12 +44,15 @@ dataset.plot_dist('Year', partitions = 22, export_data = True, name = 'jawaban_s
 dataset.dist_below(160000)
 
 # Nomor 5
+# Plotting the distribution of kilometers driven
 dataset.plot_dist('Kilometers_Driven', partitions = 1000)
 
 # Nomor 6
+# Plotting the boxplot of kilometers driven to identify outliers
 dataset.plot_boxplot('Kilometers_Driven')
 
 # Nomor 7
+# Plotting the scatter of year with respect to kilometers driven and identify whether correlation is evident
 dataset.plot_scatter('Year', 'Kilometers_Driven')
 
 # Nomor 8
@@ -61,3 +64,8 @@ dataset.count_not_first(exclude_wear= ['First', 'Second'])
 dataset.count_mileage_per_fuel('Fuel_Type', 'Mileage')
 
 # Nomor 10
+# Identifying which variables corelate with price of secondhand car
+dataset.string2num(['Name', 'Manufacturer', 'Location', 'Fuel_Type', 'Transmission', 'Owner_Type'],
+                   export_data = True,
+                   name = 'numeric.csv')
+dataset.heatmap_corr(save = True, filename = 'correlaton_matrix.png')
