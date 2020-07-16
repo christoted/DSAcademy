@@ -1,6 +1,7 @@
 import pandas            as pd
 import numpy             as np
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
 import math
 
 from copy import deepcopy
@@ -145,7 +146,7 @@ class Dataset:
         drop_index   = []
 
         for i in range(self.num_data):
-            if self.data.Owner_Type.iloc[i]  == 'First':
+            if self.data.Owner_Type.iloc[i]  == 'Firsta':
                 drop_index.append(i)
 
         dataset_used   = dataset_used.drop(index = drop_index).reset_index(drop = True)
@@ -196,7 +197,7 @@ class Dataset:
         fuel_mileage['mean_mileage'] = mean_mileage
         fuel_mileage                 = fuel_mileage.sort_values('mean_mileage', ascending = False)
 
-        print('\nFuel with lowest mileage value is ' + fuel_mileage.iloc[-1, 0] + ' with mean mileage of ' + str(fuel_mileage.iloc[-1, 1]))
+        print('\nFuel with lowest mileage value is ' + fuel_mileage.iloc[0, 0] + ' with mean mileage of ' + str(fuel_mileage.iloc[0, 1]))
         print(fuel_mileage)
 
         if export_data == True:
@@ -222,10 +223,19 @@ class Dataset:
         plt.show()
 
     def plot_scatter(self, feature1, feature2):
-        data_x = self.data[feature1]
-        data_y = self.data[feature2]
+        data_x = self.data[feature1].to_numpy().reshape((-1,1))
+        data_y = self.data[feature2].to_numpy()
+        model = LinearRegression().fit(data_x, data_y)
+        m = model.coef_
+        c = model.intercept_
 
-        plt.scatter(data_x,data_y)
+        x_line = [min(data_x), max(data_x)]
+        y_line = m*x_line + c
+
+        print('\nCorrelation coefficient between Year and Kilometers_Driven is : ' + str(self.data['Year'].corr(self.data['Kilometers_Driven'])) + '\n')
+
+        plt.scatter(data_x,data_y, s = 4)
+        plt.plot(x_line,y_line, 'r')
         plt.title('The scatter plot of ' + feature1 + ' and ' + feature2)
         plt.xlabel(feature1)
         plt.ylabel(feature2)
@@ -252,14 +262,14 @@ class Dataset:
         print('Max : ' + str(max))
         print('Min : ' + str(min))
         print('There are ' + str(outlier_up) + ' upper outliers data in ' + feature)
-        print('There are ' + str(outlier_down) + ' bottom outliers data in ' + feature)
+        print('There are ' + str(outlier_down) + ' bottom outliers data in ' + feature + '\n')
 
         self.data.boxplot(column = feature, showfliers = False)
-        plt.title('Boxplot of ' + feature + ' without outliers')
+        plt.title('Boxplot of ' + feature + ' without outliers' + '\n')
         plt.show()
 
         self.data.boxplot(showfliers = True)
-        plt.title('Boxplot of ' + feature + ' with outliers')
+        plt.title('Boxplot of ' + feature + ' with outliers' + '\n')
         plt.show()
 
     def dist_below(self, x = 50000):
@@ -267,3 +277,13 @@ class Dataset:
         dist_below_x = (self.data.Kilometers_Driven < x).sum()
         print('\nThe number of cars with distance traveled below ' + str(x) + ' KM is : ' + str(dist_below_x) + '\n')
         return dist_below_x
+
+    def export_no_outlier(self, feature, num):
+        data_export = self.data[feature]
+        output      = []
+        output_df   = pd.DataFrame()
+        for i in range(self.num_data):
+            if data_export.iloc[i] < num:
+                output.append(data_export.iloc[i])
+        output_df[feature] = output
+        output_df.to_csv(feature + '_outlier.csv', index = False)

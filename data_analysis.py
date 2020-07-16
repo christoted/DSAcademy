@@ -41,7 +41,7 @@ dataset.plot_dist('Year', partitions = 22, export_data = True, name = 'jawaban_s
 
 # Nomor 4
 # The number of cars with distance traveled below 100.000 KM.
-dataset.dist_below(100000)
+dataset.dist_below(160000)
 
 # Nomor 5
 dataset.plot_dist('Kilometers_Driven', partitions = 1000)
@@ -50,7 +50,6 @@ dataset.plot_dist('Kilometers_Driven', partitions = 1000)
 dataset.plot_boxplot('Kilometers_Driven')
 
 # Nomor 7
-# ANOVA
 dataset.plot_scatter('Year', 'Kilometers_Driven')
 
 # Nomor 8
