@@ -232,7 +232,7 @@ class Dataset:
         x_line = [min(data_x), max(data_x)]
         y_line = m*x_line + c
 
-        print('\nCorrelation coefficient between Year and Kilometers_Driven is : ' + str(self.data['Year'].corr(self.data['Kilometers_Driven'])) + '\n')
+        print('\nCorrelation coefficient between ' + feature1 + ' and ' + feature2 + ' is : ' + str(self.data[feature1].corr(self.data[feature2])) + '\n')
 
         plt.scatter(data_x,data_y, s = 4)
         plt.plot(x_line,y_line, 'r')
@@ -240,6 +240,8 @@ class Dataset:
         plt.xlabel(feature1)
         plt.ylabel(feature2)
         plt.show()
+        print(model.coef_)
+        print(model.intercept_)
 
     def plot_boxplot(self, feature):
         boxplot_data = self.data[feature]
@@ -272,6 +274,18 @@ class Dataset:
         plt.title('Boxplot of ' + feature + ' with outliers' + '\n')
         plt.show()
 
+    def regression_categorical(self, feature1, feature2):
+        x = np.zeros((self.num_data, np.unique(self.data[feature1]).shape[0]))
+        y = self.data[feature2].to_numpy().reshape(self.num_data,)
+        print(np.shape(x))
+        print(np.shape(y))
+        for i in range(self.num_data):
+            x[i, self.data[feature1].iloc[i]] = 1
+
+        model1 = LinearRegression().fit(x, y)
+        print(model1.coef_     + 5000438116370)
+        print(model1.intercept_- 5000438116370)
+
     def dist_below(self, x = 50000):
 
         dist_below_x = (self.data.Kilometers_Driven < x).sum()
@@ -283,7 +297,7 @@ class Dataset:
             unique = self.data[i].unique()
             for j in range(self.num_data):
                 self.data[i].iloc[j] = np.where((unique == self.data[i].iloc[j]) == 1)[0][0]
-            pd.to_numeric(self.data[i])
+            self.data[i] = pd.to_numeric(self.data[i])
 
         if export_data == True:
             self.data.to_csv(name, index = False)
@@ -323,7 +337,7 @@ class Dataset:
         ax.set_title(title)
         fig.tight_layout()
         if save == True:
-            plt.savefig(filename, dpi=2000)
+            plt.savefig(filename, dpi=100)
         plt.show()
 
     def export_no_outlier(self, feature, num):

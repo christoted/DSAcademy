@@ -4,6 +4,7 @@
 # Misael Jordan Enrico
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from EDA import Dataset
 
@@ -30,6 +31,8 @@ dataset.missing_value(drop_nan = True,
 # Nomor 1
 # Counting cars by manufacturer.
 dataset.count_manufacturer(export_data = True)
+
+print(dataset.data['Price'].max())
 
 # Nomor 2
 # Counting used cars by location.
@@ -69,3 +72,6 @@ dataset.string2num(['Name', 'Manufacturer', 'Location', 'Fuel_Type', 'Transmissi
                    export_data = True,
                    name = 'numeric.csv')
 dataset.heatmap_corr(save = True, filename = 'correlaton_matrix.png')
+dataset.plot_scatter('Engine', 'Price')
+dataset.plot_scatter('Power', 'Price')
+dataset.plot_scatter('Transmission', 'Price')
